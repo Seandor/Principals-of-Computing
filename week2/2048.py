@@ -2,7 +2,7 @@
 Clone of 2048 game.
 """
 
-# import poc_2048_gui
+import poc_2048_gui
 import random
 
 # Directions, DO NOT MODIFY
@@ -20,10 +20,26 @@ OFFSETS = {UP: (1, 0),
 
 def merge(line):
     """
-    Helper function that merges a single row or column in 2048
+    Function that merges a single row or column in 2048.
     """
-    # replace with your code from the previous mini-project
-    return []
+    def slide(line):
+        """
+        Function that slides a single row or column in 2048
+        """
+        temp_line = [0]*len(line)
+        index_s = 0
+        for num in line:
+            if num != 0:
+                temp_line[index_s] = num
+                index_s += 1
+        return temp_line
+    temp_line = slide(line)
+    for index, num in enumerate(temp_line):
+        if index < (len(temp_line)-1) and num == temp_line[index+1]:
+            temp_line[index] += num
+            temp_line[index+1] = 0
+    mergedline = slide(temp_line)
+    return mergedline
 
 class TwentyFortyEight:
     """
@@ -95,6 +111,7 @@ class TwentyFortyEight:
                 row = start_cell[0] + step * OFFSETS[direction][0]
                 col = start_cell[1] + step * OFFSETS[direction][1]
                 self.grid[row][col] = tmp_list[step]
+        self.new_tile()
 
     def new_tile(self):
         """
@@ -106,11 +123,7 @@ class TwentyFortyEight:
             new_row = random.randint(0, self.grid_height-1)
             new_col = random.randint(0, self.grid_width-1)
             if (self.grid[new_row][new_col] == 0):
-                if random.randint(0, 9) in range(0, 8):
-                    rand_num = 2
-                else:
-                    rand_num = 4
-                self.grid[new_row][new_col] =  rand_num;
+                self.grid[new_row][new_col] =  2 if random.randint(0, 9) < 8 else 4;
                 break
 
     def set_tile(self, row, col, value):
@@ -125,6 +138,4 @@ class TwentyFortyEight:
         """
         return self.grid[row][col]
 
-
-print str(TwentyFortyEight(4, 4))
-# poc_2048_gui.run_gui(TwentyFortyEight(4, 4))
+poc_2048_gui.run_gui(TwentyFortyEight(4, 4))
